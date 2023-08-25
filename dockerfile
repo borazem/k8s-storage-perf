@@ -2,10 +2,10 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal
 FROM quay.io/operator-framework/ansible-operator:v1.17.0
 
 LABEL name="k8s-storage-perf" \
-      maintainer="Nathan Brophy <nathan.brophy@ibm.com>" \
+      maintainer="Benjamin Orazem / Nathan Brophy <nathan.brophy@ibm.com>" \
       vendor="IBM" \
-      version="v1.0.0" \
-      release="Version 1.0.0 containerized packaging for the K8s sotrage performance ansible playbooks" \
+      version="v1.0.1" \
+      release="Version 1.0.0 containerized packaging for the K8s storage performance ansible playbooks" \
       summary="This is a containerized version of the k8s-storage-perf ansible playbooks" \
       description="This image contains the ansible playbooks for running the storage test execution suite"
 
@@ -34,13 +34,13 @@ RUN ln -fs ${HOME}/bin/entrypoint /usr/local/bin/entrypoint
 RUN python3 -m pip install --upgrade pip;  pip3 uninstall -y ansible \
     && rm -rf /usr/local/lib/python3.8/site-packages/ansible* \
     && rm -f /usr/local/bin/ansible* \
-    && pip3 install ansible-base~=2.10  \
+    && pip3 install ansible-base~=2.10.5  \
     && pip3 install openshift && pip3 install Jinja2 && pip3 install yasha && pip3 install argparse \
     && ln -s /usr/bin/python3 /usr/local/bin/python \
-    && pip3 install "oauthlib>=3.2.0" \
+    && pip3 install "oauthlib>=3.2.2" \
     && ansible-galaxy collection install operator_sdk.util \
-    && ansible-galaxy collection install community.kubernetes  \
-    && curl -sL https://github.com/openshift/okd/releases/download/4.8.0-0.okd-2021-11-14-052418/openshift-client-linux-4.8.0-0.okd-2021-11-14-052418.tar.gz | tar xvz --directory /usr/local/bin/. \
+    && ansible-galaxy collection install kubernetes.core  \
+    && curl -sL https://github.com/okd-project/okd/releases/download/4.12.0-0.okd-2023-04-16-041331/openshift-client-linux-4.12.0-0.okd-2023-04-16-041331.tar.gz | tar xvz --directory /usr/local/bin/. \
     && chown -R ${USER_UID}:0 ${HOME} && chmod -R ug+rwx ${HOME}
 
 USER ${USER_UID}
